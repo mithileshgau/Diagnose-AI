@@ -20,4 +20,8 @@ public class ChatController {
     public ResponseEntity<UserResponse> handleUserInput(@RequestBody UserInputRequest userInputRequest) {
         return ResponseEntity.ok(chatService.processUserInput(userInputRequest));
     }
+    @PostMapping("/helloWorld")
+    public ResponseEntity<String> helloWorld(@RequestBody UserInputRequest userInputRequest) {
+        return ResponseEntity.ok("HelloWorld");
+    }
 }

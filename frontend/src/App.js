@@ -1,20 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router} from 'react-router-dom';
 import {Routes, Route} from 'react-router-dom';
-import useAuthRedirect from './components/hooks/useAuthRedirect';
 
 import AuthPage from "./page/AuthPage";
+import Chat from './components/Chat/Chat';
 
 function App() {
-  useAuthRedirect();
   
+
   return (
     <Router>
       <div>
         <section>                              
-            <Routes>                                                                        
-              {/* <Route path="/" element={<Home/>}/> */}
-              <Route path="/auth" element={<AuthPage/>}/>
+            <Routes> 
+              <Route exact path="/" element={<AuthPage/>}/>                                                                       
+              <Route exact path="/chat" element={<Chat/>}/>
             </Routes>                    
         </section>
       </div>

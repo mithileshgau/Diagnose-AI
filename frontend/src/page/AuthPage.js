@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AuthPage.css";
 import SignInForm from "../components/auth/SignIn";
 import SignUpForm from "../components/auth/SignUp";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function AuthPage() {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, navigate to /chat
+        navigate('/chat');
+      } 
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [navigate]);
   const [type, setType] = useState("signIn");
   const handleOnClick = text => {
     if (text !== type) {

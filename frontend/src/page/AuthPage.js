@@ -15,7 +15,7 @@ export default function AuthPage() {
     "container " + (type === "signUp" ? "right-panel-active" : "");
   return (
     <div className="App">
-      <h2>Sign In/Up</h2>
+      <h2>Diagnose-AI</h2>
       <div className={containerClass} id="container">
         <SignUpForm />
         <SignInForm />

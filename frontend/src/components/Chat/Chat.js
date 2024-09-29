@@ -38,8 +38,11 @@ export default function Chat() {
             unsubscribe = onSnapshot(q, (querySnapshot) => {
               const fetchedItems = querySnapshot.docs.map(doc => ({
                 id: doc.id,
-                ...doc.data()
+                "Title":doc.data().Title,
+                "Date":firestoreTimestampToDaysAgo(doc.data().Date),
+                "user":doc.data().user
               }));
+              console.log(fetchedItems);
               setConversations(fetchedItems);
             }, (error) => {
               console.error("Error listening to query: ", error);
@@ -57,7 +60,24 @@ export default function Chat() {
         }
       }
     }, [])
+    function firestoreTimestampToDaysAgo(timestamp) {
+      // Convert Firestore timestamp to JavaScript Date
+      const milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
+      const date = new Date(milliseconds);
     
+      // Calculate difference in days
+      const currentDate = new Date();
+      const differenceInTime = currentDate.getTime() - date.getTime();
+      const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+    
+      // Format as string
+      if (differenceInDays === 0) {
+        return "Today";
+      }else{
+        return `${differenceInDays} days ago`;
+      }
+      
+    }
     async function SendMessage(){  
         setChatEnabled(false);
         setResponseIncoming(true);
@@ -124,7 +144,7 @@ export default function Chat() {
                         </div>
                       </div>
                       <div className="pt-1">
-                        <p className="small mb-1 text-white">{conv.Date.toDate()}</p>
+                        <p className="small mb-1 text-white">{conv.Date}</p>
                       </div>
                     </a>
                   </li>

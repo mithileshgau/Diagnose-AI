@@ -12,7 +12,7 @@ ipt = [0 for i in range(len(cols)-1)]
 for s in symptoms:
   ipt[cols.index(s)]=1
 ipt = np.array([ipt])
-print(ipt)
+# print(ipt)
 # print(dt.predict(ipt))
 disease = dt.predict(ipt)
 print(disease[0])

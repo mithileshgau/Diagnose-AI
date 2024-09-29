@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 @Configuration
@@ -15,11 +16,14 @@ public class GoogleCredentialService {
 
     @Bean
     public GoogleCredentials googleCredentials() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Personal\\Diagnose-AI\\app\\src\\main\\resources\\diagnosemeai-aee1af7331b2.json"))
+
+        InputStream in = this.getClass().getResourceAsStream("/diagnosemeai-service-key.json");
+//        InputStream in = this.getClass().getResourceAsStream("/diagnosemeai-aee1af7331b2.json");
+
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(in)
                 .createScoped(Arrays.asList(
                         "https://www.googleapis.com/auth/cloud-platform"
                 ));
-        googleCredentials.refreshIfExpired();
         return googleCredentials;
     }
 

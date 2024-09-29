@@ -8,10 +8,11 @@ import com.google.cloud.vertexai.generativeai.preview.ChatSession;
 import com.google.cloud.vertexai.generativeai.preview.GenerativeModel;
 import com.google.cloud.vertexai.generativeai.preview.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+@DependsOn("googleCredentials")
 @Service
 public class GeminiService {
     @Autowired
@@ -25,7 +26,7 @@ public class GeminiService {
 
 
     GeminiService() throws IOException {
-        vertexAI = new VertexAI("diagnosemeai", "us-east1");
+        vertexAI = new VertexAI("diagnosemeai", "us-east1",Transport.REST,googleCredentials);
         model = new GenerativeModel("gemini-pro", vertexAI);
         chat = model.startChat();
     }

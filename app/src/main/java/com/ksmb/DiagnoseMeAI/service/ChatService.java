@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class ChatService {
 
-    // Simulate the LLM interaction with this method
+
     private LLMResponse extractInformationFromLLM(String inputText) {
         // Mocking the LLM's extraction process
         Map<String, Object> extractedData = new HashMap<>();
@@ -24,7 +24,7 @@ public class ChatService {
 
     // Process the user input, extract the data using LLM, and return the response
     public UserResponse processUserInput(UserInputRequest userInputRequest) {
-        // Extract information from LLM (mocked here)
+
         LLMResponse llmResponse = extractInformationFromLLM(userInputRequest.getInputText());
 
         // Create a user response

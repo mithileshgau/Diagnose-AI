@@ -1,15 +1,25 @@
 package com.ksmb.DiagnoseMeAI.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Map;
 
-@Getter
-@Setter
 public class UserResponse {
     private String message;
     private Map<String, Object> extractedData;
 
-    // Getters and setters
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Map<String, Object> getExtractedData() {
+        return extractedData;
+    }
+
+    public void setExtractedData(Map<String, Object> extractedData) {
+        this.extractedData = extractedData;
+    }
+// Getters and setters
 }

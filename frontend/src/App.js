@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router} from 'react-router-dom';
 import {Routes, Route} from 'react-router-dom';
 import useAuthRedirect from './components/hooks/useAuthRedirect';
-
+import Chat from './components/Chat/Chat';
 import AuthPage from "./page/AuthPage";
 
 function App() {

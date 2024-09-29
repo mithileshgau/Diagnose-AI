@@ -12,13 +12,70 @@ import {
   MDBCardHeader,
 } from "mdb-react-ui-kit";
 import "./Chat.css";
-
-
+import { collection,addDoc,onSnapshot,doc,query,where } from "firebase/firestore";
+import { firestore,auth } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+let unsubscribe;
 export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [msgText, setMsgText] = useState('');
-    function SendMessage(){  
-        setMessages([...messages, msgText]);      
+    const [chatEnabled, setChatEnabled] = useState(true);
+    const [convId, setConvId] = useState('');
+    const [userId, setuserId] = useState('')
+    const [conversations, setConversations] = useState([])
+    const [responseIncoming, setResponseIncoming] = useState(false);
+    useEffect(() => {
+     var ismounted=true
+     if (ismounted)
+     {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            const uid = user.uid;
+            setuserId(uid)
+            const itemsCollection = collection(firestore, "Conversations");
+            const q = query(itemsCollection, where("user", "==", uid));
+        
+            unsubscribe = onSnapshot(q, (querySnapshot) => {
+              const fetchedItems = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+              }));
+              setConversations(fetchedItems);
+            }, (error) => {
+              console.error("Error listening to query: ", error);
+            });
+          } else {
+            console.log("user is logged out")
+          }
+        });
+     }
+    
+      return () => {
+        ismounted=false
+        if (unsubscribe){
+          unsubscribe();
+        }
+      }
+    }, [])
+    
+    async function SendMessage(){  
+        setChatEnabled(false);
+        setResponseIncoming(true);
+        setMessages([...messages, msgText]);    
+        var document=await addDoc(collection(firestore, "Conversations"), {
+          Title:"New Conversation",
+          "Date":new Date(),     
+          user:userId     
+       })
+       setConvId(document.id)
+       const mainDocRef = doc(firestore, "Conversations", document.id);
+       const subcollectionRef = collection(mainDocRef, "Messages");
+       const newDocRef = await addDoc(subcollectionRef, {
+          "Message":msgText,
+          "Sender":userId,
+          "Date":new Date()
+       });
+         
         // fetch('http://localhost:3001/chat',{
         //     method: 'POST',
         //     headers: {
@@ -41,7 +98,38 @@ export default function Chat() {
           <MDBCard className="mask-custom">
             <MDBCardBody>
               <MDBTypography listUnStyled className="mb-0">
-                <li
+                {conversations.map((conv,index)=>(
+                    <li
+                    className="p-2 border-bottom"
+                    style={{
+                      borderBottom: "1px solid rgba(255,255,255,.3) !important",
+                    }}
+                  >
+                    <a
+                      href="#!"
+                      className="d-flex justify-content-between link-light"
+                    >
+                      <div className="d-flex flex-row">
+                        <img
+                          src="chat-icon.png"
+                          alt="avatar"
+                          className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
+                          width="60"
+                        />
+                        
+                        <div className="pt-1">
+                          <p className="small text-white">
+                            {conv.Title}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pt-1">
+                        <p className="small mb-1 text-white">{conv.Date.toDate()}</p>
+                      </div>
+                    </a>
+                  </li>
+                ))}
+                {/* <li
                   className="p-2 border-bottom"
                   style={{
                     borderBottom: "1px solid rgba(255,255,255,.3) !important",
@@ -69,7 +157,7 @@ export default function Chat() {
                       <p className="small mb-1 text-white">Just now</p>
                     </div>
                   </a>
-                </li>
+                </li> */}
               </MDBTypography>
             </MDBCardBody>
           </MDBCard>
@@ -110,7 +198,7 @@ export default function Chat() {
             <li className="mb-3">
               <MDBTextArea value={msgText} onChange={(e)=>{setMsgText(e.target.value)}} label="Message" id="textAreaExample" rows={4} />
             </li>
-            <MDBBtn onClick={()=>SendMessage()} color="light" size="lg" rounded className="float-end">
+            <MDBBtn disabled={!chatEnabled} onClick={()=>SendMessage()} color="light" size="lg" rounded className="float-end">
               Send
             </MDBBtn>
           </MDBTypography>

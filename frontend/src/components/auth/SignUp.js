@@ -1,52 +1,61 @@
 import React from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection,addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 function SignUpForm() {
+  const navigate = useNavigate();
   const [state, setState] = React.useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
   });
 
-  const handleChange = evt => {
+  const handleChange = (evt) => {
     const value = evt.target.value;
     setState({
       ...state,
-      [evt.target.name]: value
+      [evt.target.name]: value,
     });
   };
 
-  const handleOnSubmit = async evt => {
+  const handleOnSubmit = async (evt) => {
     evt.preventDefault();
 
     const { name, email, password } = state;
 
     try {
-    console.log(auth)
-      const userCredential = await createUserWithEmailAndPassword(auth,email, password);
+      console.log(auth);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
-      // Store additional user data in Firestore
-    //   await firestore.collection("users").doc(user.uid).set({
-    //     name,
-    //     email
-    //   });
-    await addDoc(collection(firestore, "users"), {
-        name:name,
-        email:email
-    })
-      alert("User signed up successfully!");
+      try {
+        await addDoc(collection(firestore, "users"), {
+          name: name,
+          email: email,
+        });
+
+        console.log("User Signed Up!");
+        navigate("/chat");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
 
       // Clear the form
       setState({
         name: "",
         email: "",
-        password: ""
+        password: "",
       });
     } catch (error) {
-      alert(error.message);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
     }
   };
 

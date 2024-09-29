@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router} from 'react-router-dom';
 import {Routes, Route} from 'react-router-dom';
-import Home from './page/Home';
+import useAuthRedirect from './components/hooks/useAuthRedirect';
 
 import AuthPage from "./page/AuthPage";
 
 function App() {
+  useAuthRedirect();
+  
   return (
     <Router>
       <div>

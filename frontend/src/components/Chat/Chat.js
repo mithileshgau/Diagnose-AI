@@ -15,8 +15,11 @@ import "./Chat.css";
 import { collection,addDoc,onSnapshot,doc,query,where } from "firebase/firestore";
 import { firestore,auth } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 let unsubscribe;
 export default function Chat() {
+  const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [msgText, setMsgText] = useState('');
     const [chatEnabled, setChatEnabled] = useState(true);
@@ -45,6 +48,7 @@ export default function Chat() {
               console.error("Error listening to query: ", error);
             });
           } else {
+            navigate('/');
             console.log("user is logged out")
           }
         });
@@ -57,6 +61,16 @@ export default function Chat() {
         }
       }
     }, [])
+
+    const handleLogout = async () => {
+      try {
+        await signOut(auth);
+        navigate('/');
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
     
     async function SendMessage(){  
         setChatEnabled(false);
@@ -200,6 +214,10 @@ export default function Chat() {
             </li>
             <MDBBtn disabled={!chatEnabled} onClick={()=>SendMessage()} color="light" size="lg" rounded className="float-end">
               Send
+            </MDBBtn>
+
+            <MDBBtn disabled={!chatEnabled} onClick={()=>handleLogout()} color="light" size="lg" rounded className="float-end">
+              Logout
             </MDBBtn>
           </MDBTypography>
         </MDBCol>

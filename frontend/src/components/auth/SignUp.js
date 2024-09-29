@@ -33,11 +33,13 @@ function SignUpForm() {
         password
       );
       const user = userCredential.user;
+      console.log(user);
 
       try {
         await addDoc(collection(firestore, "users"), {
           name: name,
           email: email,
+          uid: user.uid,
         });
 
         console.log("User Signed Up!");

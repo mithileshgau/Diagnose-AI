@@ -15,7 +15,7 @@ public class GoogleCredentialService {
 
     @Bean
     public GoogleCredentials googleCredentials() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Personal\\Diagnose-AI\\app\\src\\main\\resources\\diagnosemeai-aee1af7331b2.json"))
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\SANKET\\Documents\\Projects\\Diagnose-AI\\app\\src\\main\\resources\\diagnosemeai-aee1af7331b2.json"))
                 .createScoped(Arrays.asList(
                         "https://www.googleapis.com/auth/cloud-platform"
                 ));

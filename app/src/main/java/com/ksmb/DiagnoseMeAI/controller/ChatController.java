@@ -20,7 +20,9 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
     private DiseasePredictionService diseasePredictionService;
+
 
     @PostMapping("/input")
     public ResponseEntity<UserResponse> handleUserInput(@RequestBody UserInputRequest userInputRequest) throws IOException {

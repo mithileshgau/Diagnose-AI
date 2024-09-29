@@ -25,7 +25,7 @@ public class GeminiService {
 
 
     GeminiService() throws IOException {
-        vertexAI = new VertexAI("diagnosemeai", "us-east1");
+        vertexAI = new VertexAI("diagnosemeai", "us-east1", googleCredentials);
         model = new GenerativeModel("gemini-pro", vertexAI);
         chat = model.startChat();
     }

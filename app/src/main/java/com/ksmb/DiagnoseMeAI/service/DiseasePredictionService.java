@@ -1,12 +1,20 @@
 package com.ksmb.DiagnoseMeAI.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+@Service
 public class DiseasePredictionService {
+
+    @Autowired
+    GeminiService geminiService;
+
     public String runPythonScript(String input) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "C:/Users/SANKET/Documents/Projects/Diagnose-AI/model/predict_disease.py");
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "../model/predict_disease.py");
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
@@ -20,6 +28,8 @@ public class DiseasePredictionService {
         }
 
         process.waitFor();
-        return result.toString();
+        String prompt = "I have symptoms for: " + result.toString() + "Give me precautions to take for this disease";
+
+        return geminiService.prompt(prompt);
     }
 }

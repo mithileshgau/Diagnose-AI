@@ -17,8 +17,8 @@ public class GoogleCredentialService {
     GoogleCredentialService() throws IOException {
         this.credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Personal\\Diagnose-AI\\app\\src\\main\\resources\\diagnosemeai-aee1af7331b2.json"))
                 .createScoped(Arrays.asList(
-                        // List  scopes here
-                        "https://www.googleapis.com/auth/cloud-platform"
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://apiplatform.googleapis.com"
                 ));
         this.credentials.refreshIfExpired();
         this.token = credentials.getAccessToken();

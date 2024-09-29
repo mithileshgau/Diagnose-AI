@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/chatbot")
 public class ChatController {
@@ -21,7 +23,7 @@ public class ChatController {
     private DiseasePredictionService diseasePredictionService;
 
     @PostMapping("/input")
-    public ResponseEntity<UserResponse> handleUserInput(@RequestBody UserInputRequest userInputRequest) {
+    public ResponseEntity<UserResponse> handleUserInput(@RequestBody UserInputRequest userInputRequest) throws IOException {
         return ResponseEntity.ok(chatService.processUserInput(userInputRequest));
     }
     @PostMapping("/helloWorld")

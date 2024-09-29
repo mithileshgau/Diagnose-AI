@@ -4,7 +4,9 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.vertexai.Transport;
 import com.google.cloud.vertexai.VertexAI;
 import com.google.cloud.vertexai.api.GenerateContentResponse;
+import com.google.cloud.vertexai.generativeai.preview.ChatSession;
 import com.google.cloud.vertexai.generativeai.preview.GenerativeModel;
+import com.google.cloud.vertexai.generativeai.preview.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +15,23 @@ import java.io.IOException;
 @Service
 public class GeminiService {
     @Autowired
-    static GoogleCredentials googleCredential;
+    private GoogleCredentials googleCredentials;
 
-    public static void main(String[] args) {
-        try{
-            VertexAI vertexAI = new VertexAI("diagnosemeai","us",googleCredential);
-            GenerativeModel model = new GenerativeModel("gemini-pro", vertexAI);
-            GenerateContentResponse response = model.generateContent("How are you?");
-            System.out.println(response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private VertexAI vertexAI;
+
+    private GenerativeModel model;
+
+    private ChatSession chat;
+
+
+    GeminiService() throws IOException {
+        vertexAI = new VertexAI("diagnosemeai", "us-east1");
+        model = new GenerativeModel("gemini-pro", vertexAI);
+        chat = model.startChat();
+    }
+
+    public String prompt(String inputText) throws IOException {
+        GenerateContentResponse response = chat.sendMessage(inputText);
+        return ResponseHandler.getText(response);
     }
 }

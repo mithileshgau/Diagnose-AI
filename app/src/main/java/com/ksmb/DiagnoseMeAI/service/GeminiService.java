@@ -7,15 +7,16 @@ import com.google.cloud.vertexai.api.GenerateContentResponse;
 import com.google.cloud.vertexai.generativeai.preview.ChatSession;
 import com.google.cloud.vertexai.generativeai.preview.GenerativeModel;
 import com.google.cloud.vertexai.generativeai.preview.ResponseHandler;
+import com.ksmb.DiagnoseMeAI.configuration.GoogleCredentialsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-@DependsOn("googleCredentials")
+
 @Service
 public class GeminiService {
-    @Autowired
+
     private GoogleCredentials googleCredentials;
 
     private VertexAI vertexAI;
@@ -24,15 +25,21 @@ public class GeminiService {
 
     private ChatSession chat;
 
-
-    GeminiService() throws IOException {
-        vertexAI = new VertexAI("diagnosemeai", "us-east1",Transport.REST,googleCredentials);
-        model = new GenerativeModel("gemini-pro", vertexAI);
-        chat = model.startChat();
+    @Autowired
+    GeminiService(GoogleCredentials googleCredentials) throws IOException {
+        this.googleCredentials = googleCredentials;
+        this.googleCredentials.refresh();
+        if(this.googleCredentials.getAccessToken() == null){
+            throw  new IOException("Error loading credentials");
+        }
+        this.vertexAI = new VertexAI("diagnosemeai", "us-central1",Transport.REST,googleCredentials);
+        this.model = new GenerativeModel("gemini-pro", vertexAI);
+        this.chat = model.startChat();
     }
 
     public String prompt(String inputText) throws IOException {
-        GenerateContentResponse response = chat.sendMessage(inputText);
+        GenerateContentResponse response = this.chat.sendMessage(inputText);
         return ResponseHandler.getText(response);
+
     }
 }

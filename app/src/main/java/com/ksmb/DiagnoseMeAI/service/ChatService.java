@@ -5,6 +5,7 @@ import com.ksmb.DiagnoseMeAI.model.LLMResponse;
 import com.ksmb.DiagnoseMeAI.model.UserInputRequest;
 import com.ksmb.DiagnoseMeAI.model.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,10 +14,12 @@ import java.util.Map;
 
 @Service
 public class ChatService {
-    @Autowired
     GeminiService geminiService;
 
-    // Process the user input, extract the data using LLM, and return the response
+    @Autowired
+    ChatService(GeminiService geminiService){
+        this.geminiService = geminiService;
+    }
     public UserResponse processUserInput(UserInputRequest userInputRequest) throws IOException {
         LLMResponse llmResponse = extractInformationFromLLM(userInputRequest.getInputText());
         UserResponse userResponse = new UserResponse();

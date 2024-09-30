@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/chatbot")
+@RequestMapping("/chat")
 public class ChatController {
     @Autowired
     private ChatService chatService;

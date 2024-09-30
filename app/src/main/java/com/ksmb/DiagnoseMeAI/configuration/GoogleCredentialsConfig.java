@@ -22,10 +22,6 @@ public class GoogleCredentialsConfig {
         Resource resource = new ClassPathResource(safeResourcePath);
         InputStream in = resource.getInputStream();
 
-        if (in == null) {
-            throw new IOException("Credentials file not found");
-        }
-
         GoogleCredentials googleCredentials = GoogleCredentials.fromStream(in)
                 .createScoped(Arrays.asList(
                         "https://www.googleapis.com/auth/cloud-platform"
